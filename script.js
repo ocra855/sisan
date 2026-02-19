@@ -1006,3 +1006,64 @@ function importData(event) {
     };
     reader.readAsText(file);
 }
+
+// ============================================================
+// PWA インストールバナー制御
+// ============================================================
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+
+    // セッション中に非表示にしていなければバナーを表示
+    if (!sessionStorage.getItem('pwa-banner-dismissed')) {
+        showInstallBanner();
+    }
+});
+
+function showInstallBanner() {
+    const banner = document.getElementById('pwa-install-banner');
+    if (banner) {
+        banner.classList.remove('hidden');
+        banner.classList.add('visible');
+    }
+}
+
+function hideInstallBanner() {
+    const banner = document.getElementById('pwa-install-banner');
+    if (banner) {
+        banner.classList.remove('visible');
+        // アニメーション後に hidden クラスを戻す
+        setTimeout(() => banner.classList.add('hidden'), 300);
+    }
+}
+
+// インストールボタン
+document.addEventListener('DOMContentLoaded', () => {
+    const installBtn = document.getElementById('pwa-install-btn');
+    const dismissBtn = document.getElementById('pwa-dismiss-btn');
+
+    if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+            if (!deferredInstallPrompt) return;
+            deferredInstallPrompt.prompt();
+            const { outcome } = await deferredInstallPrompt.userChoice;
+            deferredInstallPrompt = null;
+            hideInstallBanner();
+        });
+    }
+
+    if (dismissBtn) {
+        dismissBtn.addEventListener('click', () => {
+            sessionStorage.setItem('pwa-banner-dismissed', '1');
+            hideInstallBanner();
+        });
+    }
+});
+
+// インストール完了後はバナーを非表示
+window.addEventListener('appinstalled', () => {
+    hideInstallBanner();
+    deferredInstallPrompt = null;
+});

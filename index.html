@@ -11,12 +11,29 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#121212">
     <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js" defer></script>
 </head>
 
 <body>
+    <!-- PWAインストールバナー -->
+    <div id="pwa-install-banner" class="pwa-banner hidden">
+        <div class="pwa-banner-content">
+            <img src="icon-192.png" alt="アプリアイコン" class="pwa-banner-icon">
+            <div class="pwa-banner-text">
+                <strong>Money Manager</strong>
+                <span>ホーム画面に追加してオフラインで使えます</span>
+            </div>
+        </div>
+        <div class="pwa-banner-actions">
+            <button id="pwa-install-btn" class="pwa-install-btn">インストール</button>
+            <button id="pwa-dismiss-btn" class="pwa-dismiss-btn">✕</button>
+        </div>
+    </div>
     <div id="app">
         <header>
             <h1>Money Manager</h1>
